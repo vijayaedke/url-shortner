@@ -16,25 +16,29 @@ func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestR
 		return nil, fmt.Errorf("no request url found")
 	}
 
-	shortURL := s.utils.BaseConversion(request.URL)
+	getShortURL := s.utils.BaseConversion(request.URL)
 	key := base64.StdEncoding.EncodeToString([]byte(request.URL))
 
-	shortURL, err := s.redisClient.SetURLStore(key, shortURL)
+	setShortURL, err := s.redisClient.SetURLStore(key, getShortURL)
 	if err != nil {
 		return nil, err
 	}
-	if _, err = s.redisClient.SetURLStore(shortURL, key); err != nil {
-		return nil, err
-	}
 
-	if shortURL != "" {
+	if setShortURL == "" {
+		// if URL is not set already, do cross mapping for short URL with long URL key
+		if _, err = s.redisClient.SetURLStore(getShortURL, key); err != nil {
+			return nil, err
+		}
+
 		return &model.URLShortenResponse{
-			ShortURL:  fmt.Sprintf("%s/%s", BITLY_URL, shortURL),
+			ShortURL:  fmt.Sprintf("%s/%s", BITLY_URL, getShortURL),
 			CreatedAt: time.Now(),
 		}, nil
 	}
 
-	return nil, nil
+	return &model.URLShortenResponse{
+		ShortURL: fmt.Sprintf("%s/%s", BITLY_URL, setShortURL),
+	}, nil
 
 	// read file utility
 	// response, err := s.utils.ConvertLongURLToShortURL(ctx, request.URL)
@@ -45,8 +49,12 @@ func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestR
 	// return response, nil
 }
 
-func (s *URLService) Redirect(ctx context.Context, request *model.URLRequestResponse) (*model.URLRequestResponse, error) {
-	getURL, err := s.redisClient.GetURLStore(request.URL)
+func (s *URLService) Redirect(ctx context.Context, requestURL string) (*model.URLRequestResponse, error) {
+	if requestURL == "" {
+		return nil, fmt.Errorf("no query param found")
+	}
+
+	getURL, err := s.redisClient.GetURLStore(requestURL)
 	if err != nil {
 		return nil, err
 	}

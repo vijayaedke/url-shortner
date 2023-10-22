@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  db:
+    image: redis
+    restart: always
+    environment:
+      - REDIS_PASSWORD=test
+      - REDIS_DATABASE=1
+    volumes:
+      - /Users/user1/mongo/database:/data/db
+  urlapp:
+    image: urlapp:latest
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8085:8085
+    environment:
+      - REDIS_HOST=localhost
+      - REDIS_DATABASE=1
+      - REDIS_PASSWORD=test
+      - REDIS_PORT=6379    
+    depends_on:
+      - db
