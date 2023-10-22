@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"path/filepath"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -10,7 +11,9 @@ import (
 func InitConfig(configFile string) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
-	viper.AddConfigPath("../../config") // path to look for the config file in
+	config, _ := filepath.Abs(filepath.Clean("../../internal/config"))
+
+	viper.AddConfigPath(config) // path to look for the config file in
 
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
