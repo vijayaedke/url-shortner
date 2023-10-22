@@ -8,6 +8,7 @@ import (
 	"url-shortner/internal/wire"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var cfgFile string
@@ -29,6 +30,10 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	viper.BindEnv("redis.password", "REDIS_PASSWORD")
+	viper.BindEnv("redis.host", "REDIS_HOST")
+	viper.BindEnv("redis.port", "REDIS_PORT")
+	viper.BindEnv("redis.database", "REDIS_DATABASE")
 	cobra.OnInitialize(initConfig)
 
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "")
@@ -40,8 +45,8 @@ func initConfig() {
 }
 
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	err := rootCmd.Execute()
+	if err != nil {
+		fmt.Println("url shortner app init failed", err)
 	}
 }

@@ -8,20 +8,20 @@ import (
 	"os"
 	"strings"
 	"time"
-	"url-shortner/internal/app/model"
 
-	"github.com/go-redis/redis"
+	"url-shortner/internal/app/model"
 )
 
 type Utility interface {
 	ConvertLongURLToShortURL(input string) (*model.URLShortenResponse, error)
+	BaseConversion(input string) string
 }
 
 type UtilRequest struct {
 	file *os.File
 }
 
-func NewUtilityService(redisClient *redis.Client) Utility {
+func NewUtilityService() Utility {
 	fileExists, err := os.Open("/Users/user1/go/src/github.com/url-shortner/pkg/data/url_store.json")
 	if err != nil {
 		log.Fatal("failed to locate url store file")
@@ -42,16 +42,17 @@ func (u *UtilRequest) ConvertLongURLToShortURL(input string) (*model.URLShortenR
 		return val, nil
 	}
 
-	output := u.baseConversion(input)
+	output := u.BaseConversion(input)
 	response := &model.URLShortenResponse{
 		ShortURL:  output,
 		CreatedAt: time.Now(),
 	}
-
+	urlStore[input] = response
+	u.writeURLStore(urlStore)
 	return response, nil
 }
 
-func (u *UtilRequest) baseConversion(input string) string {
+func (u *UtilRequest) BaseConversion(input string) string {
 	charSet := "ABCDEFGHIIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 	var (
 		sb    strings.Builder
@@ -65,6 +66,7 @@ func (u *UtilRequest) baseConversion(input string) string {
 	return sb.String()
 }
 
+// file utilities
 func (u *UtilRequest) readURLStore() (map[string]*model.URLShortenResponse, error) {
 	fileRead, err := io.ReadAll(u.file)
 	if err != nil {

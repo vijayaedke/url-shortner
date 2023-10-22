@@ -2,11 +2,11 @@ package model
 
 import "time"
 
-type URLShortenRequest struct {
-	URL string
+type URLRequestResponse struct {
+	URL string `json:"url"`
 }
 
 type URLShortenResponse struct {
-	ShortURL  string
-	CreatedAt time.Time
+	ShortURL  string    `json:"short_url"`
+	CreatedAt time.Time `json:"created_at"`
 }
