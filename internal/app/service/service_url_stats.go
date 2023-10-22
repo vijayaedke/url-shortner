@@ -41,7 +41,13 @@ func (s *URLService) GetURLStats(ctx context.Context) (*model.URLStatsResponse, 
 		return urlListResponse[i].Count > urlListResponse[j].Count
 	})
 
+	if len(urlListResponse) >= 3 {
+		return &model.URLStatsResponse{
+			URLlist: urlListResponse[:3],
+		}, nil
+	}
+
 	return &model.URLStatsResponse{
-		URLlist: urlListResponse[:3],
+		URLlist: urlListResponse,
 	}, nil
 }
