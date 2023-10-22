@@ -8,6 +8,8 @@ services:
       - REDIS_PASSWORD=test
       - REDIS_DATABASE=1
     command: redis-server --requirepass $REDIS_PASSWORD
+    volumes:
+      - /opt/homebrew/var/db/redis:/data/app
   urlapp:
     image: urlapp:latest
     restart: always
