@@ -18,5 +18,5 @@ type URLStatsResponse struct {
 
 type URLlist struct {
 	URL   string `json:"url"`
-	Count int    `json:"reuqested_count"`
+	Count int    `json:"requested_count"`
 }
