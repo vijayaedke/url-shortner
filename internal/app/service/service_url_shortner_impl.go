@@ -9,7 +9,7 @@ import (
 	"url-shortner/internal/app/model"
 )
 
-const BITLY_URL = "https://bitly.com"
+const BITLY_URL = "https://bitly.com" //example domain
 
 func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestResponse) (*model.URLShortenResponse, error) {
 	if request == nil || (request != nil && request.URL == "") {
@@ -21,12 +21,14 @@ func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestR
 
 	setShortURL, err := s.redisClient.SetURLStore(key, getShortURL)
 	if err != nil {
+		fmt.Printf("failed s.redisClient.SetURLStore %+v", err)
 		return nil, err
 	}
 
 	if setShortURL == "" {
 		// if URL is not set already, do cross mapping for short URL with long URL key
 		if _, err = s.redisClient.SetURLStore(getShortURL, key); err != nil {
+			fmt.Printf("failed s.redisClient.SetURLStore %+v", err)
 			return nil, err
 		}
 
@@ -54,16 +56,19 @@ func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestR
 
 func (s *URLService) Redirect(ctx context.Context, requestURL string) (*model.URLRequestResponse, error) {
 	if requestURL == "" {
+		fmt.Println("no query param found")
 		return nil, fmt.Errorf("no query param found")
 	}
 
 	getURL, err := s.redisClient.GetURLStore(requestURL)
 	if err != nil {
+		fmt.Printf("failed s.redisClient.GetURLStore %+v", err)
 		return nil, err
 	}
 
 	decodeURL, err := base64.StdEncoding.DecodeString(getURL)
 	if err != nil {
+		fmt.Printf("failed base64.StdEncoding.DecodeString %+v", err)
 		return nil, err
 	}
 

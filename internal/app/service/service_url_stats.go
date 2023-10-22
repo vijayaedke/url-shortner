@@ -13,6 +13,7 @@ import (
 func (s *URLService) GetURLStats(ctx context.Context) (*model.URLStatsResponse, error) {
 	keySet, err := s.redisClient.GetAllURLStore()
 	if err != nil {
+		fmt.Printf("failed s.redisClient.GetAllURLStore %+v", err)
 		return nil, err
 	}
 
@@ -23,7 +24,7 @@ func (s *URLService) GetURLStats(ctx context.Context) (*model.URLStatsResponse, 
 			decodeKey, _ := base64.StdEncoding.DecodeString(key)
 			parsedURL, err := url.Parse(string(decodeKey))
 			if err != nil {
-				fmt.Println("failed to parse URL", err)
+				fmt.Printf("failed to parse URL %+v", err)
 			} else {
 				hashSet[parsedURL.Host]++
 			}
