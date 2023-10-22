@@ -18,7 +18,15 @@ First, clone this Git repository to your local machine using the following comma
 git clone https://github.com/vijayaedke/url-shortner
 ```
 
-### 2. Run the application
+### 2. Install dependency of go required to run the app
+
+Use the following command:
+
+```
+go mod download
+```
+
+### 3. Run the application
 
 To execute the application run the following command:
 
