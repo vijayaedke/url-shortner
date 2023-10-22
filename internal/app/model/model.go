@@ -8,5 +8,5 @@ type URLRequestResponse struct {
 
 type URLShortenResponse struct {
 	ShortURL  string    `json:"short_url"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt time.Time `json:"created_at,omitempty"`
 }

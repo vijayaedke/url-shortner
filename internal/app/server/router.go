@@ -9,22 +9,18 @@ import (
 
 func NewAppRoutes(config config.Configuration, handler handler.BaseHandler) *gin.Engine {
 	route := gin.Default()
-	route.Use()
+	route.Use(func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET")
+		c.Next()
+	})
+	route.UseRawPath = true
+	route.UnescapePathValues = false
+
 	routerApiGroup := route.Group("/api/v1")
 
-	routerApiGroup.POST("/url-short", handler.URLShortner)
-	routerApiGroup.GET("/{id}", handler.Redirect)
+	URLShortApiGroup := routerApiGroup.Group("/url-short")
+	URLShortApiGroup.POST("/", handler.URLShortner)
+	URLShortApiGroup.GET("/", handler.Redirect)
 
 	return route
 }
-
-// func apiTimeout(c *gin.Context) gin.IRoutes {
-// 	timeout := time.Second * 20
-// 	ctx, cancel := context.WithTimeout(c, timeout)
-// 	defer func() {
-// 		cancel()
-// 		if ctx.Err() == context.DeadlineExceeded {
-// 			c.Request.Response.Header.Add("Gateway time out", http.StatusGatewayTimeout)
-// 		}
-// 	}()
-// }

@@ -10,7 +10,7 @@ import (
 func InitConfig(configFile string) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
-	viper.AddConfigPath("/internal/config/") // path to look for the config file in
+	viper.AddConfigPath("../../config") // path to look for the config file in
 
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))

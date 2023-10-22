@@ -9,13 +9,13 @@ import (
 )
 
 func (h *Handler) URLShortner(c *gin.Context) {
-	var request *model.URLRequestResponse
-	if err := c.BindJSON(request); err != nil {
+	var request model.URLRequestResponse
+	if err := c.BindJSON(&request); err != nil {
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
 
-	response, err := h.service.URLShortner(c, request)
+	response, err := h.service.URLShortner(c, &request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
@@ -25,12 +25,7 @@ func (h *Handler) URLShortner(c *gin.Context) {
 }
 
 func (h *Handler) Redirect(c *gin.Context) {
-	var request *model.URLRequestResponse
-	if err := c.BindJSON(request); err != nil {
-		c.JSON(http.StatusBadRequest, err)
-		return
-	}
-
+	request := c.Query("url")
 	response, err := h.service.Redirect(c, request)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
