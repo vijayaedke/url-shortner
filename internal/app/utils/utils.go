@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/rand"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -22,7 +23,8 @@ type UtilRequest struct {
 }
 
 func NewUtilityService() Utility {
-	fileExists, err := os.Open("/Users/user1/go/src/github.com/url-shortner/pkg/data/url_store.json")
+	urlStore, _ := filepath.Abs("pkg/data/url_store.json")
+	fileExists, err := os.Open(urlStore)
 	if err != nil {
 		log.Fatal("failed to locate url store file")
 	}

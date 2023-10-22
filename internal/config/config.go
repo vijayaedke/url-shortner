@@ -11,7 +11,7 @@ import (
 func InitConfig(configFile string) {
 	viper.SetConfigName("config")
 	viper.SetConfigType("json")
-	config, _ := filepath.Abs(filepath.Clean("../../internal/config"))
+	config, _ := filepath.Abs(filepath.Clean("internal/config"))
 
 	viper.AddConfigPath(config) // path to look for the config file in
 
