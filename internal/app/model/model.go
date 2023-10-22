@@ -7,8 +7,9 @@ type URLRequestResponse struct {
 }
 
 type URLShortenResponse struct {
-	ShortURL  string    `json:"short_url"`
-	CreatedAt time.Time `json:"created_at,omitempty"`
+	ShortURL  string     `json:"short_url"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	Status    *bool      `json:"url_exists,omitempty"`
 }
 
 type URLStatsResponse struct {

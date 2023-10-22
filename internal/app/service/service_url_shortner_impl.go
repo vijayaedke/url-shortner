@@ -30,14 +30,17 @@ func (s *URLService) URLShortner(ctx context.Context, request *model.URLRequestR
 			return nil, err
 		}
 
+		currentTime := time.Now()
 		return &model.URLShortenResponse{
 			ShortURL:  fmt.Sprintf("%s/%s", BITLY_URL, getShortURL),
-			CreatedAt: time.Now(),
+			CreatedAt: &currentTime,
 		}, nil
 	}
 
+	urlExists := true
 	return &model.URLShortenResponse{
 		ShortURL: fmt.Sprintf("%s/%s", BITLY_URL, setShortURL),
+		Status:   &urlExists,
 	}, nil
 
 	// read file utility

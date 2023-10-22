@@ -13,6 +13,8 @@ import (
 	"url-shortner/internal/app/model"
 )
 
+const HASHVALUE = 1000000
+
 type Utility interface {
 	ConvertLongURLToShortURL(input string) (*model.URLShortenResponse, error)
 	BaseConversion(input string) string
@@ -45,9 +47,10 @@ func (u *UtilRequest) ConvertLongURLToShortURL(input string) (*model.URLShortenR
 	}
 
 	output := u.BaseConversion(input)
+	currentTime := time.Now()
 	response := &model.URLShortenResponse{
 		ShortURL:  output,
-		CreatedAt: time.Now(),
+		CreatedAt: &currentTime,
 	}
 	urlStore[input] = response
 	u.writeURLStore(urlStore)
@@ -60,8 +63,10 @@ func (u *UtilRequest) BaseConversion(input string) string {
 		sb    strings.Builder
 		index = 7
 	)
+	rand.Seed(time.Now().UnixNano())
+
 	for index > 0 {
-		sb.WriteString(string(charSet[rand.Intn(67)%62]))
+		sb.WriteString(string(charSet[rand.Intn(HASHVALUE)%62]))
 		index--
 	}
 
