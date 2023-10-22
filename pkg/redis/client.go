@@ -16,6 +16,7 @@ type RedisClient struct {
 type RedisService interface {
 	SetURLStore(key, value string) (string, error)
 	GetURLStore(key string) (string, error)
+	GetAllURLStore() ([]string, error)
 }
 
 func NewRedisClient(config config.Configuration) RedisService {
@@ -51,4 +52,21 @@ func (r *RedisClient) GetURLStore(key string) (string, error) {
 		return "", err
 	}
 	return result, err
+}
+
+func (r *RedisClient) GetAllURLStore() ([]string, error) {
+	var cursor uint64
+	var keys []string
+	var err error
+	for {
+		keys, cursor, err = r.Client.Scan(cursor, "*", 0).Result()
+		if err != nil {
+			return nil, err
+		}
+
+		if cursor == 0 { // no more keys
+			return keys, nil
+		}
+	}
+	return nil, fmt.Errorf("no urls found")
 }

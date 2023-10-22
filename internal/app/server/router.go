@@ -16,7 +16,7 @@ func NewAppRoutes(config config.Configuration, handler handler.BaseHandler) *gin
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, GET")
 		c.Next()
 	})
-	route.Use(apiTimeoutMiddleware())
+	// route.Use(apiTimeoutMiddleware())
 
 	route.UseRawPath = true
 	route.UnescapePathValues = false
@@ -26,6 +26,8 @@ func NewAppRoutes(config config.Configuration, handler handler.BaseHandler) *gin
 	URLShortApiGroup := routerApiGroup.Group("/url-short")
 	URLShortApiGroup.POST("/", handler.URLShortner)
 	URLShortApiGroup.GET("/", handler.Redirect)
+
+	routerApiGroup.GET("/stats", handler.GetURLStats)
 
 	return route
 }

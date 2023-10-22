@@ -13,6 +13,7 @@ import (
 type Service interface {
 	URLShortner(ctx context.Context, request *model.URLRequestResponse) (*model.URLShortenResponse, error)
 	Redirect(ctx context.Context, request string) (*model.URLRequestResponse, error)
+	GetURLStats(ctx context.Context) (*model.URLStatsResponse, error)
 }
 
 type URLService struct {

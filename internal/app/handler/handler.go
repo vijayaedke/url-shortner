@@ -10,6 +10,7 @@ import (
 type BaseHandler interface {
 	URLShortner(c *gin.Context)
 	Redirect(c *gin.Context)
+	GetURLStats(c *gin.Context)
 }
 
 type Handler struct {
