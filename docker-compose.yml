@@ -4,10 +4,10 @@ services:
     image: redis
     restart: always
     environment:
+      - REDIS_ARGS=--requirepass $REDIS_PASSWORD
       - REDIS_PASSWORD=test
       - REDIS_DATABASE=1
-    volumes:
-      - /Users/user1/mongo/database:/data/db
+    command: redis-server --requirepass $REDIS_PASSWORD
   urlapp:
     image: urlapp:latest
     restart: always
@@ -15,9 +15,9 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 8085:8085
+      - 8086:8086
     environment:
-      - REDIS_HOST=localhost
+      - REDIS_HOST=db
       - REDIS_DATABASE=1
       - REDIS_PASSWORD=test
       - REDIS_PORT=6379    

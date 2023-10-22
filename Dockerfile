@@ -1,14 +1,16 @@
-FROM golang:1.19.2-alpine as builder
+# syntax=docker/dockerfile:1
+
+FROM golang:1.19
 
 WORKDIR /opt/url-shortner
 
-ENV CGO_ENABLED=0 
-# pre-copy/cache go.mod for pre-downloading dependencies and only redownloading them in subsequent builds if they change
 COPY go.mod go.sum ./
-RUN go mod download && go mod verify
+RUN go mod download
 
 COPY . .
 
-EXPOSE 8086
+RUN CGO_ENABLED=0 GOOS=linux go build cmd/urlapp/main.go
 
-ENTRYPOINT [ "/opt/cmd/urlapp/main" ]
+EXPOSE 8086
+ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
+CMD ["./main"]
