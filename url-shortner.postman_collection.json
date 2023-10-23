@@ -1,0 +1,107 @@
+{
+	"info": {
+		"_postman_id": "83afbdaf-ce3a-400a-a21b-b0a969f20275",
+		"name": "url-shortner",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "30021473"
+	},
+	"item": [
+		{
+			"name": "Get shortened URL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://www.youtube.com/shorts/NRW1JKm-5AM\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://urlapp:8086/api/v1/url-short",
+					"protocol": "http",
+					"host": [
+						"urlapp"
+					],
+					"port": "8086",
+					"path": [
+						"api",
+						"v1",
+						"url-short"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get original URL",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"url\": \"https://stackoverflow.com/questions/8078018\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://0.0.0.0:8086/api/v1/url-short/?url=YWV22iZ",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "8086",
+					"path": [
+						"api",
+						"v1",
+						"url-short",
+						""
+					],
+					"query": [
+						{
+							"key": "url",
+							"value": "YWV22iZ"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get statistics of top 3 sites",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://0.0.0.0:8086/api/v1/stats",
+					"protocol": "http",
+					"host": [
+						"0",
+						"0",
+						"0",
+						"0"
+					],
+					"port": "8086",
+					"path": [
+						"api",
+						"v1",
+						"stats"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
