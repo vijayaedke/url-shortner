@@ -56,16 +56,16 @@ func (r *RedisClient) GetURLStore(key string) (string, error) {
 
 func (r *RedisClient) GetAllURLStore() ([]string, error) {
 	var cursor uint64
-	var keys []string
+	var keys, result []string
 	var err error
 	for {
 		keys, cursor, err = r.Client.Scan(cursor, "*", 0).Result()
 		if err != nil {
 			return nil, err
 		}
-
+		result = append(result, keys...)
 		if cursor == 0 { // no more keys
-			return keys, nil
+			return result, nil
 		}
 	}
 	return nil, fmt.Errorf("no urls found")
